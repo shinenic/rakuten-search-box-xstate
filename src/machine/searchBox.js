@@ -31,7 +31,7 @@ const suggestionState = {
   states: {
     idle: {},
     deboucing: {
-      entry: ['cancelSearch', 'sendSearchEventAfterDelay'],
+      entry: ['cancelSearch', 'cleanSuggestion', 'sendSearchEventAfterDelay'],
     },
     fetching: {
       entry: 'setNoError',
