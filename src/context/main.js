@@ -21,13 +21,16 @@ const MainProvider = ({ children }) => {
     console.log(state.context)
   }
 
+  const { searchMode } = state.context
+
   const actions = {
     openSearchBox: () => send('OPEN_SEARCH_BOX'),
     closeSearchBox: () => send('CANCEL_SEARCH'),
-    changeSearchType: (searchType) => send({ type: 'CHANGE_SEARCH_TYPE', searchType }),
+    changeSearchMode: (searchMode) => send({ type: 'CHANGE_SEARCH_MODE', searchMode }),
     changeInput: (keyword = '') => send({ type: 'CHANGE_INPUT', keyword }),
     cleanInput: () => send('TOGGLE_CLEAN'),
-    doSearch: (keyword = '') => send({ type: 'DO_SEARCH', keyword }),
+    doSearch: (keyword = '', newFilter = { mode: searchMode }) =>
+      send({ type: 'DO_SEARCH', keyword, newFilter }),
   }
 
   const getMainContext = () => {

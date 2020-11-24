@@ -24,9 +24,9 @@ const suggestionState = {
     GET_SUGGESTIONS: { target: '.fetching' },
     CHANGE_INPUT: { target: '.deboucing', actions: 'setInputValue' },
     TOGGLE_CLEAN: { actions: ['cleanSuggestion', 'cleanInputValue'] },
-    CHANGE_SEARCH_TYPE: { actions: 'setSearchType' },
+    CHANGE_SEARCH_MODE: { actions: 'setSearchMode' },
     CANCEL_SEARCH: { target: 'close' },
-    DO_SEARCH: { cond: 'withInputValue', target: 'close', actions: ['setKeyword'] },
+    DO_SEARCH: { cond: 'withInputValue', target: 'close', actions: ['setKeyword', 'setFilter'] },
   },
   states: {
     idle: {},
@@ -54,7 +54,8 @@ const searchBoxState = {
   id: 'search-box-modal',
   states: {
     open: {
-      entry: ['initialInputValue', 'cleanSuggestion'],
+      entry: ['initInputValue', 'initSearchMode'],
+      exit: 'cleanSuggestion',
       ...suggestionState,
     },
     close: {
@@ -65,7 +66,7 @@ const searchBoxState = {
   },
 }
 
-export const SEARCH_TYPE = {
+export const SEARCH_MODE = {
   MALL: '全站',
   JAPAN: '日本購物/旅遊',
   BOOK: '書籍/電子書',
@@ -73,9 +74,12 @@ export const SEARCH_TYPE = {
 
 const initialContext = {
   keyword: '',
+  filter: {
+    mode: '',
+  },
   inputValue: '',
   result: '',
-  searchType: SEARCH_TYPE.MALL,
+  searchMode: SEARCH_MODE.MALL,
   suggestions: [],
   loading: false,
   error: null,
@@ -95,14 +99,16 @@ export const RakutenMallMobileSearchbox = Machine(
 
       // set actions
       setKeyword: assign({ keyword: (_, { keyword }) => keyword || '' }),
+      setFilter: assign({ filter: ({ filter }, { newFilter = {} }) => ({ ...filter, ...newFilter }) }),
       setInputValue: assign({ inputValue: (_, { keyword }) => keyword }),
       setSuggestions: assign({ suggestions: (_, e) => e?.data ?? [] }),
-      setSearchType: assign({ searchType: (_, { searchType }) => searchType }),
+      setSearchMode: assign({ searchMode: (_, { searchMode }) => searchMode }),
       setResult: assign({ result: (_, { result }) => result }),
       setNoError: assign({ error: null }),
       setError: assign({ error: (_, e) => e.data || true }),
 
-      initialInputValue: assign({ inputValue: ({ keyword }) => keyword }),
+      initInputValue: assign({ inputValue: ({ keyword }) => keyword }),
+      initSearchMode: assign({ searchMode: SEARCH_MODE.MALL }),
 
       // deboucing actions
       sendSearchEventAfterDelay: send('GET_SUGGESTIONS', {

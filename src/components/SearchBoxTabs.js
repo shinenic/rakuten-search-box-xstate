@@ -1,13 +1,13 @@
 import React from 'react'
 import { useMainContext } from 'context/main'
-import { SEARCH_TYPE } from 'machine/searchBox'
+import { SEARCH_MODE } from 'machine/searchBox'
 import { toPairs } from 'lodash'
 
 const SearchBoxTabs = () => {
   const {
     state,
-    context: { searchType },
-    actions: { changeSearchType },
+    context: { searchMode },
+    actions: { changeSearchMode },
   } = useMainContext()
   const isModalOpen = state.matches('open')
 
@@ -15,9 +15,9 @@ const SearchBoxTabs = () => {
 
   return (
     <div className="search-page__search-tabs">
-      {toPairs(SEARCH_TYPE).map(([key, tabName]) => {
-        const isSameType = searchType === tabName
-        const handleClick = () => !isSameType && changeSearchType(SEARCH_TYPE[key])
+      {toPairs(SEARCH_MODE).map(([key, tabName]) => {
+        const isSameType = searchMode === tabName
+        const handleClick = () => !isSameType && changeSearchMode(SEARCH_MODE[key])
         const classes = isSameType
           ? 'search-page__search-tabs__tab search-page__search-tabs__tab--active'
           : 'search-page__search-tabs__tab'
