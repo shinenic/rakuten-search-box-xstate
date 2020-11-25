@@ -20,7 +20,7 @@ const suggestionState = {
   initial: 'idle',
   on: {
     GET_SUGGESTIONS: { target: '.fetching' },
-    TOGGLE_DEBOUCING_INPUT: { target: '.deboucingInput', internal: false },
+    TOGGLE_DEBOUCING_INPUT: { target: '.deboucingInput', internal: false, actions: 'setInputValue' },
     TOGGLE_CLEAN: { actions: ['cleanSuggestion', 'cleanInputValue'] },
     CHANGE_SEARCH_MODE: { actions: 'setSearchMode' },
     CANCEL_SEARCH: { target: 'close' },
@@ -29,7 +29,6 @@ const suggestionState = {
   states: {
     idle: {},
     deboucingInput: {
-      entry: 'setInputValue',
       after: {
         [DELAY_TIME]: 'fetching',
       },
@@ -55,13 +54,19 @@ const searchBoxState = {
   id: 'search-box-modal',
   states: {
     open: {
-      entry: ['resetInputValue', 'resetSearchMode'],
       exit: 'cleanSuggestion',
       ...suggestionState,
     },
     close: {
       on: {
-        OPEN_SEARCH_BOX: [{ cond: 'withKeyword', target: 'open.fetching' }, { target: 'open.idle' }],
+        OPEN_SEARCH_BOX: [
+          {
+            cond: 'withKeyword',
+            target: 'open.fetching',
+            actions: ['resetInputValue', 'resetSearchMode'],
+          },
+          { target: 'open.idle', actions: ['resetInputValue', 'resetSearchMode'] },
+        ],
       },
     },
   },
