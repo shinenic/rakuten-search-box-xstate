@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/rakuten-search-box-xstate/static/css/main.6fa43030.chunk.css",
+    "main.css": "/rakuten-search-box-xstate/static/css/main.9ab75a6f.chunk.css",
     "main.js": "/rakuten-search-box-xstate/static/js/main.b43bb9b4.chunk.js",
     "main.js.map": "/rakuten-search-box-xstate/static/js/main.b43bb9b4.chunk.js.map",
     "runtime-main.js": "/rakuten-search-box-xstate/static/js/runtime-main.f1d531be.js",
@@ -10,13 +10,13 @@
     "static/js/3.e508ba85.chunk.js": "/rakuten-search-box-xstate/static/js/3.e508ba85.chunk.js",
     "static/js/3.e508ba85.chunk.js.map": "/rakuten-search-box-xstate/static/js/3.e508ba85.chunk.js.map",
     "index.html": "/rakuten-search-box-xstate/index.html",
-    "static/css/main.6fa43030.chunk.css.map": "/rakuten-search-box-xstate/static/css/main.6fa43030.chunk.css.map",
+    "static/css/main.9ab75a6f.chunk.css.map": "/rakuten-search-box-xstate/static/css/main.9ab75a6f.chunk.css.map",
     "static/js/2.94247f24.chunk.js.LICENSE.txt": "/rakuten-search-box-xstate/static/js/2.94247f24.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f1d531be.js",
     "static/js/2.94247f24.chunk.js",
-    "static/css/main.6fa43030.chunk.css",
+    "static/css/main.9ab75a6f.chunk.css",
     "static/js/main.b43bb9b4.chunk.js"
   ]
 }
