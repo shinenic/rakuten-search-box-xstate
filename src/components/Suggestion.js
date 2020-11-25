@@ -11,16 +11,17 @@ const Suggestion = () => {
 
   if (!isModalOpen) return null
 
+  const handleClick = (text) => () => doSearch(text)
+
   return (
     <div className="search-page__suggestion-wrapper">
-      <div className="search-page__suggestion-wrapper__row">
+      <div className="search-page__suggestion-wrapper__row" onClick={handleClick(inputValue)}>
         <b>{inputValue}</b>
       </div>
       {suggestions.map((text, index) => {
-        const handleClick = () => doSearch(text)
         const additionalText = text.substr(inputValue.length)
         return (
-          <div key={index} className="search-page__suggestion-wrapper__row" onClick={handleClick}>
+          <div key={index} className="search-page__suggestion-wrapper__row" onClick={handleClick(text)}>
             <b>{inputValue}</b>
             {additionalText}
           </div>
