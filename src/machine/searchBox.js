@@ -8,7 +8,7 @@ const fetchSuggestion = ({ inputValue }, { keyword }) => {
   return new Promise((reslove) => {
     setTimeout(() => {
       let result = []
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 7; i++) {
         result.push(`${inputValue}${makeid(random(3, 10))}`)
       }
       reslove(result)

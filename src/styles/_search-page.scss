@@ -97,10 +97,21 @@
     border: 2px solid black;
     height: calc(100% - 42px - 60px);
     padding: 16px;
+    position: relative;
 
     &__row {
       line-height: 28px;
       padding: 8px 0;
+    }
+
+    &__progress {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      bottom: 8px;
+      left: 0;
+      font-size: 20px;
+      color: #777;
     }
   }
 
