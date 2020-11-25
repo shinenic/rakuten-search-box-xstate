@@ -1,6 +1,8 @@
-import { assign, Machine } from 'xstate'
+import { assign, Machine, send, actions } from 'xstate'
 import { makeid } from 'utils/base'
 import { random } from 'lodash'
+
+const { cancel } = actions
 
 const DELAY_TIME = 1000
 
@@ -20,7 +22,10 @@ const suggestionState = {
   initial: 'idle',
   on: {
     GET_SUGGESTIONS: { target: '.fetching' },
-    TOGGLE_DEBOUCING_INPUT: { target: '.deboucingInput', internal: false, actions: 'setInputValue' },
+    TOGGLE_DEBOUCING_INPUT: {
+      target: '.deboucingInput',
+      actions: ['cancelSearch', 'sendSearchEventAfterDelay', 'setInputValue'],
+    },
     TOGGLE_CLEAN: { actions: ['cleanSuggestion', 'cleanInputValue'] },
     CHANGE_SEARCH_MODE: { actions: 'setSearchMode' },
     CANCEL_SEARCH: { target: 'close' },
@@ -29,9 +34,7 @@ const suggestionState = {
   states: {
     idle: {},
     deboucingInput: {
-      after: {
-        [DELAY_TIME]: 'fetching',
-      },
+      entry: 'cleanSuggestion',
     },
     fetching: {
       entry: 'cleanSuggestionError',
@@ -55,18 +58,12 @@ const searchBoxState = {
   states: {
     open: {
       exit: 'cleanSuggestion',
+      entry: ['resetInputValue', 'resetSearchMode'],
       ...suggestionState,
     },
     close: {
       on: {
-        OPEN_SEARCH_BOX: [
-          {
-            cond: 'withKeyword',
-            target: 'open.fetching',
-            actions: ['resetInputValue', 'resetSearchMode'],
-          },
-          { target: 'open.idle', actions: ['resetInputValue', 'resetSearchMode'] },
-        ],
+        OPEN_SEARCH_BOX: [{ cond: 'withKeyword', target: 'open.fetching' }, { target: 'open.idle' }],
       },
     },
   },
@@ -116,6 +113,13 @@ export const RakutenMallMobileSearchbox = Machine(
       // reset actions
       resetInputValue: assign({ inputValue: ({ keyword }) => keyword }),
       resetSearchMode: assign({ searchMode: SEARCH_MODE.MALL }),
+
+      // debounce actions
+      sendSearchEventAfterDelay: send('GET_SUGGESTIONS', {
+        delay: DELAY_TIME,
+        id: 'debounced-fetch',
+      }),
+      cancelSearch: cancel('debounced-fetch'),
     },
     guards: {
       withInputValue: ({ inputValue }) => Boolean(inputValue),
