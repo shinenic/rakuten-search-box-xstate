@@ -22,14 +22,18 @@ const suggestionState = {
   initial: 'idle',
   on: {
     GET_SUGGESTIONS: { target: '.fetching' },
-    TOGGLE_DEBOUCING_INPUT: {
-      target: '.deboucingInput',
-      actions: ['cancelSearch', 'sendSearchEventAfterDelay', 'setInputValue'],
-    },
+    TOGGLE_DEBOUCING_INPUT: [
+      {
+        cond: 'withKeywordEventValue',
+        target: '.deboucingInput',
+        actions: ['cancelSearch', 'sendSearchEventAfterDelay', 'setInputValue'],
+      },
+      { target: '.idle', actions: ['cancelSearch', 'cleanSuggestion', 'setInputValue'] },
+    ],
     TOGGLE_CLEAN: { actions: ['cleanSuggestion', 'cleanInputValue'] },
     CHANGE_SEARCH_MODE: { actions: 'setSearchMode' },
     CANCEL_SEARCH: { target: 'close' },
-    DO_SEARCH: { cond: 'withInputValue', target: 'close', actions: ['setKeyword', 'setFilter'] },
+    DO_SEARCH: { target: 'close', actions: ['setKeyword', 'setFilter'] },
   },
   states: {
     idle: {},
@@ -124,6 +128,7 @@ export const RakutenMallMobileSearchbox = Machine(
     guards: {
       withInputValue: ({ inputValue }) => Boolean(inputValue),
       withKeyword: ({ keyword }) => Boolean(keyword),
+      withKeywordEventValue: (_, { keyword }) => Boolean(keyword),
     },
     services: {
       fetchSuggestion: fetchSuggestion,

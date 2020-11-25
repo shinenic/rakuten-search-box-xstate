@@ -23,7 +23,7 @@ const SearchBox = () => {
   const handleSearchBtnClick = () => {
     if (!isModalOpen) {
       openSearchBox()
-    } else {
+    } else if (inputValue) {
       doSearch(inputValue)
     }
   }
