@@ -27,7 +27,7 @@ const MainProvider = ({ children }) => {
     openSearchBox: () => send('OPEN_SEARCH_BOX'),
     closeSearchBox: () => send('CANCEL_SEARCH'),
     changeSearchMode: (searchMode) => send({ type: 'CHANGE_SEARCH_MODE', searchMode }),
-    changeInput: (keyword = '') => send({ type: 'CHANGE_INPUT', keyword }),
+    toggleDeboucingInput: (keyword = '') => send({ type: 'TOGGLE_DEBOUCING_INPUT', keyword }),
     cleanInput: () => send('TOGGLE_CLEAN'),
     doSearch: (keyword = '', newFilter = { mode: searchMode }) =>
       send({ type: 'DO_SEARCH', keyword, newFilter }),

@@ -9,7 +9,7 @@ const SearchBox = () => {
   const {
     state,
     context: { keyword, inputValue },
-    actions: { openSearchBox, closeSearchBox, changeInput, cleanInput, doSearch },
+    actions: { openSearchBox, closeSearchBox, toggleDeboucingInput, cleanInput, doSearch },
   } = useMainContext()
 
   const isModalOpen = state.matches('open')
@@ -33,7 +33,10 @@ const SearchBox = () => {
     : 'search-page__search-box'
 
   const inputText = isModalOpen ? inputValue : keyword
-  const handleInputChange = (e) => changeInput(e.target.value)
+
+  const handleInputChange = (e) => {
+    toggleDeboucingInput(e.target.value)
+  }
 
   const showCleanBtn = isModalOpen && !isEmpty(inputValue)
 

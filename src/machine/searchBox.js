@@ -1,10 +1,8 @@
-import { assign, send, actions, Machine } from 'xstate'
+import { assign, Machine } from 'xstate'
 import { makeid } from 'utils/base'
 import { random } from 'lodash'
 
-const { cancel } = actions
-
-const DELAY_TIME = 800
+const DELAY_TIME = 1000
 
 const fetchSuggestion = ({ inputValue }, { keyword }) => {
   return new Promise((reslove) => {
@@ -22,7 +20,7 @@ const suggestionState = {
   initial: 'idle',
   on: {
     GET_SUGGESTIONS: { target: '.fetching' },
-    CHANGE_INPUT: { target: '.deboucing', actions: 'setInputValue' },
+    TOGGLE_DEBOUCING_INPUT: { target: '.deboucingInput', internal: false },
     TOGGLE_CLEAN: { actions: ['cleanSuggestion', 'cleanInputValue'] },
     CHANGE_SEARCH_MODE: { actions: 'setSearchMode' },
     CANCEL_SEARCH: { target: 'close' },
@@ -30,8 +28,11 @@ const suggestionState = {
   },
   states: {
     idle: {},
-    deboucing: {
-      entry: ['cancelSearch', 'cleanSuggestion', 'sendSearchEventAfterDelay'],
+    deboucingInput: {
+      entry: 'setInputValue',
+      after: {
+        [DELAY_TIME]: 'fetching',
+      },
     },
     fetching: {
       entry: 'setNoError',
@@ -109,13 +110,6 @@ export const RakutenMallMobileSearchbox = Machine(
 
       initInputValue: assign({ inputValue: ({ keyword }) => keyword }),
       initSearchMode: assign({ searchMode: SEARCH_MODE.MALL }),
-
-      // deboucing actions
-      sendSearchEventAfterDelay: send('GET_SUGGESTIONS', {
-        delay: DELAY_TIME,
-        id: 'debounced-search',
-      }),
-      cancelSearch: cancel('debounced-search'),
     },
     guards: {
       withInputValue: ({ inputValue }) => Boolean(inputValue),
