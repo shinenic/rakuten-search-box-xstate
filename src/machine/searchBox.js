@@ -35,7 +35,7 @@ const suggestionState = {
       },
     },
     fetching: {
-      entry: 'setNoError',
+      entry: 'cleanSuggestionError',
       invoke: {
         id: 'fetch-suggestion',
         src: 'fetchSuggestion',
@@ -43,7 +43,7 @@ const suggestionState = {
           { cond: 'withInputValue', target: 'idle', actions: 'setSuggestions' },
           { target: 'idle' },
         ],
-        onError: { target: 'error', actions: ['setError', 'cleanSuggestion'] },
+        onError: { target: 'error', actions: ['setSuggestionError'] },
       },
     },
     error: {},
@@ -55,7 +55,7 @@ const searchBoxState = {
   id: 'search-box-modal',
   states: {
     open: {
-      entry: ['initInputValue', 'initSearchMode'],
+      entry: ['resetInputValue', 'resetSearchMode'],
       exit: 'cleanSuggestion',
       ...suggestionState,
     },
@@ -83,7 +83,7 @@ const initialContext = {
   searchMode: SEARCH_MODE.MALL,
   suggestions: [],
   loading: false,
-  error: null,
+  suggestionError: null,
 }
 
 export const RakutenMallMobileSearchbox = Machine(
@@ -97,6 +97,7 @@ export const RakutenMallMobileSearchbox = Machine(
       // clean actions
       cleanSuggestion: assign({ suggestions: [] }),
       cleanInputValue: assign({ inputValue: '' }),
+      cleanSuggestionError: assign({ suggestionError: null }),
 
       // set actions
       setKeyword: assign({ keyword: (_, { keyword }) => keyword || '' }),
@@ -105,11 +106,11 @@ export const RakutenMallMobileSearchbox = Machine(
       setSuggestions: assign({ suggestions: (_, e) => e?.data ?? [] }),
       setSearchMode: assign({ searchMode: (_, { searchMode }) => searchMode }),
       setResult: assign({ result: (_, { result }) => result }),
-      setNoError: assign({ error: null }),
-      setError: assign({ error: (_, e) => e.data || true }),
+      setSuggestionError: assign({ suggestionError: (_, e) => e?.data }),
 
-      initInputValue: assign({ inputValue: ({ keyword }) => keyword }),
-      initSearchMode: assign({ searchMode: SEARCH_MODE.MALL }),
+      // reset actions
+      resetInputValue: assign({ inputValue: ({ keyword }) => keyword }),
+      resetSearchMode: assign({ searchMode: SEARCH_MODE.MALL }),
     },
     guards: {
       withInputValue: ({ inputValue }) => Boolean(inputValue),
